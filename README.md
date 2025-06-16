@@ -1,6 +1,6 @@
 ﻿# Robotics_Project
 
-### **Intelligent Remote Control System**
+### **Intelligent Remote Control System** using https://pt.weeemake.com/product/ai-machine-learning-starter-kit-ai-education.html
 
 #### **Project Overview**
 The main goal of this project is to develop an intelligent remote control system for a mobile robot with real-time video transmission, integrating various embedded programming, network communication, motor control, audio, and web interface technologies. The system consists of two main components: the embedded code running on the robot (using MaixPy) and a web application (developed in Python/Flask) that enables remote control.
