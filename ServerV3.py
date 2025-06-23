@@ -182,7 +182,7 @@ HTML = '''
     <div></div>
 
     <button onclick="sendCmd(4)">&#8592;</button>
-    <button onclick="sendCmd(0)">&#x23F9;</button>
+    <button onclick="sendCmd(5)">&#x23F9;</button>
     <button onclick="sendCmd(6)">&#8594;</button>
 
     <div></div>
