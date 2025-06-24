@@ -215,8 +215,14 @@ def connect_wifi(ssid, password, nic):
             connected = True 
         except Exception as e:
             print("Failed to connect to wifi: ", e)
-            lcd.draw_string(0, 0, "Failed to connect to wifi", lcd.RED)
-            time.sleep(1)
+            if tries < max_tries:
+                lcd.draw_string(0, 0, "Retrying to connect...", lcd.YELLOW)
+                lcd.draw_string(0, 0, "Failed to connect to wifi", lcd.RED)
+                time.sleep(1)
+            else:
+                lcd.draw_string(0, 0, "Failed to connect to wifi", lcd.RED)
+                print("Max retries reached. Exiting.")
+                raise e
         
 def init_audio():
     # Audio
