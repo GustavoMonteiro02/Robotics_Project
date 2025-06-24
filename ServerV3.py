@@ -225,7 +225,7 @@ HTML = '''
       fetch('/get_alert')
         .then(response => response.text())
         .then(data => {
-          document.getElementById('alertBox').innerText = data || "No Alert";
+          document.getElementById('alertBox').innerText = data || "No Obstacle Alert received";
         });
     }
 

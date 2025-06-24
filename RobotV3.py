@@ -34,6 +34,7 @@ dc_1 = WeDCMotor(1)
 dc_2 = WeDCMotor(2)
 dc_3 = WeDCMotor(3)
 dc_4 = WeDCMotor(4)
+
 v_object_identifier_model_location = "/sd/20class.kmodel"
 v_20ObjectClassifier = 0	#20ObjectClassifier
 v_img = 0	#img
@@ -144,7 +145,7 @@ def is_right_obstacle(v_cx, v_cy):
 
 def react_to_command(command, v_cx, v_cy):
     print("received command " + str(command))
-    v_alert = ""
+    v_alert = "No Obstacle Alert"
     # Execute command
     if command == v_front_command:
         print("turning left")            
@@ -202,13 +203,21 @@ def init_wifi():
     return nic
     
 def connect_wifi(ssid, password, nic):
-    try:
-        nic.connect(ssid, password)
-        print("Wi-Fi conectado, IP:", nic.ifconfig()[0])
-    except Exception as e:
-        print("Failed to connect to wifi: ", e)
-        raise e
-
+    connected = False
+    lcd.draw_string(0, 0, "Connecting to Wi-Fi...", lcd.YELLOW)
+    tries = 0
+    max_tries = 10
+    while not connected and tries < max_tries:
+        tries += 1
+        try:
+            nic.connect(ssid, password)
+            print("Wi-Fi conectado, IP:", nic.ifconfig()[0])
+            connected = True 
+        except Exception as e:
+            print("Failed to connect to wifi: ", e)
+            lcd.draw_string(0, 0, "Failed to connect to wifi", lcd.RED)
+            time.sleep(1)
+        
 def init_audio():
     # Audio
     fm.register(32, fm.fpioa.GPIO1)
@@ -245,7 +254,7 @@ def get_object_detection(img):
         return v_cx, v_cy
 
 def obstacle_alert(direction):
-    return "There is an obstacle in the " + direction + " will not move"
+    return "Obstacle - " + direction + " will not move " + direction
 
 def send_alert(alert):
     print(alert)
@@ -254,7 +263,7 @@ def send_alert(alert):
     except Exception as e:
             print("Error sending alert:", e)
 
-# Copy audios to internal memory
+# Copy audios and model to internal memory
 for nome in ["turnon.wav", "turnoff.wav", "20class.kmodel"]:
     copy_to_flash(nome)
 print("Files in internal memory", os.listdir("/flash"))
@@ -262,6 +271,7 @@ print("Files in SD", os.listdir("/sd"))
 
 
 # init
+f_Stop()
 i2s, voice_en = init_audio()
 nic = init_wifi()
 connect_wifi(v_ssid, v_wifi_password, nic)
@@ -306,7 +316,6 @@ while v_continue == 1:
     if int(v_command) == v_turnoff_command:
         v_continue = 0
 
-    v_alert = "Cmon"
     current_time = time.time()
     if current_time - last_alert_time >= 1.0 and v_alert != "":
          send_alert(v_alert)
